@@ -1,6 +1,7 @@
 var async       = require('async'),
 	cc          = require('cli-color'),
 	connect     = require('connect'),
+    couchapp    = require('couchapp'),
 	fs          = require('fs'),
 	fse         = require('fs-extra'),
 	imagemagick = require('imagemagick'),
@@ -41,6 +42,16 @@ var tasks = {
 				}
 				auto.manifest.push(tasks.helpers.manifest);
 			}
+            if(project.helpers.couchapp) {
+                auto.couchapp = ['mkdirs', 'js', 'html', 'css', 'assets'];
+				if(project.helpers.icons) {
+					auto.couchapp.push('icons');
+				}
+                if(project.helpers.manifest) {
+                    auto.couchapp.push('manifest');
+                }
+                auto.couchapp.push(tasks.helpers.couchapp);
+            }
 			async.auto(auto, function(err) {
 				if(err) {
 					cb(err);
@@ -73,7 +84,11 @@ var tasks = {
 		},
 		watch: function(cb) {
 			startMsg('watching');
-			var after2 = tasks.actions.modules,
+			var after2 = (project.helpers.couchapp
+				? function() {
+					tasks.helpers.couchapp(tasks.actions.modules);
+				}
+				: tasks.actions.modules),
 				after = (project.helpers.manifest
 				? function() {
 					tasks.helpers.manifest(after2);
@@ -346,28 +361,14 @@ var tasks = {
 				cb();
 			});
 		},
-		less: function(cb) {
-			startMsg('less');
-			var parser = new(less.Parser)({
-			    paths: [source('less')],
-			    filename: 'main.less'
-			});
-			fs.readFile(path.join(source('less'), 'main.less'), 'utf8', function(err, data) {
-				if (err) {
-	                cb(err);
-	                return;
-	            }
-				parser.parse(data, function (e, tree) {
-					fs.writeFile(path.join(source('css'), 'main.css'), tree.toCSS({compress: true}), 'utf8', function(err) {
-						if (err) {
-							cb(err);
-							return;
-						}
-						doneMsg('less');
-						tasks.helpers.css(cb);
-					});
-				});
-			});
+        couchapp: function(cb) {
+			startMsg('couchapp');
+            couchapp.createApp(require('./app.js'), project.couch, function (app) {
+                app.push(function() {
+                    doneMsg('couchapp');
+                    cb();
+                });
+            });
 		},
 		css: function(cb) {
 			startMsg('css');
@@ -531,6 +532,29 @@ var tasks = {
 					cb();
 				});
 			}
+		},
+        less: function(cb) {
+			startMsg('less');
+			var parser = new(less.Parser)({
+			    paths: [source('less')],
+			    filename: 'main.less'
+			});
+			fs.readFile(path.join(source('less'), 'main.less'), 'utf8', function(err, data) {
+				if (err) {
+	                cb(err);
+	                return;
+	            }
+				parser.parse(data, function (e, tree) {
+					fs.writeFile(path.join(source('css'), 'main.css'), tree.toCSS({compress: true}), 'utf8', function(err) {
+						if (err) {
+							cb(err);
+							return;
+						}
+						doneMsg('less');
+						tasks.helpers.css(cb);
+					});
+				});
+			});
 		},
 		manifest: function(cb) {
 			startMsg('manifest');

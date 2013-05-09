@@ -4,14 +4,11 @@ require.config({
 		"ready": "libs/cordova/ready",
 		"hogan": "libs/hogan/hogan",
 		"hgn": "libs/hogan/hgn",
-		"json2": "libs/json2/json2",
 		"jquery": "libs/jquery/jquery",
 		"jqueryCookie": "libs/jquery.cookie/jquery.cookie",
 		"jqueryCouch": "libs/jquery.couch/jquery.couch",
 		"jqueryFlot": "libs/jquery.flot/jquery.flot",
 		"jqueryFlotPie": "libs/jquery.flot/jquery.flot.pie",
-		"jqueryHashchange": "libs/jquery.hashchange/jquery.hashchange",
-		"lscache": "libs/lscache/lscache",
 		"text": "libs/text/text",
 		"lodash": "libs/lodash/lodash",
 		"bootstrapAffix": "libs/bootstrap/bootstrap-affix",
@@ -27,22 +24,15 @@ require.config({
 		"bootstrapTooltip": "libs/bootstrap/bootstrap-tooltip",
 		"bootstrapTransition": "libs/bootstrap/bootstrap-transition",
 		"bootstrapTypeahead": "libs/bootstrap/bootstrap-typeahead",
-		"routie": "libs/routie/routie"
+		"routie": "libs/routie/routie",
+        "pouch": "libs/pouch/pouchdb"
 	},
 	"shim": {
 		"cordova": {
 			"exports": "cordova"
 		},
 		"jquery": {
-			"deps": [
-				"json2"
-			],
 			"exports": "jQuery"
-		},
-		"jqueryHashchange": {
-			"deps": [
-				"jquery"
-			]
 		},
 		"jqueryCookie": {
 			"deps": [
@@ -132,16 +122,33 @@ require.config({
 		},
 		"routie": {
 			"exports": "routie"
-		}
+		},
+        "pouch": {
+            "exports": "Pouch"
+        }
 	}
 });
 
-require(['ready', 'home', 'start'], function(ready, home, start) {
+require(['ready', 'home', 'start', 'pouch'], function(ready, home, start, Pouch) {
 	ready(function() {
-		if (window.screen.height==568) { // iPhone 4"
+		if (window.screen.height === 568) { // iPhone 4"
 			document.querySelector("meta[name=viewport]").content="width=320.1";
 		}
 		start();
 		home();
+        
+        var pouchdb = Pouch('test');
+        pouchdb.post({ title: 'local title' }, function(err, response) {
+            console.log(arguments);
+          });
+          
+        var remotedb = Pouch('http://localhost:5984/test');
+        remotedb.post({ title: 'remote title' }, function(err, response) {
+            console.log(arguments);
+          });
+          
+          Pouch.replicate('test', 'http://localhost:5984/test', function(err, response) {
+            console.log(arguments);
+          });
 	});
 });

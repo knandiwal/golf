@@ -1,0 +1,58 @@
+{
+	"project": {
+		"name": "Golf",
+		"package": "co.fedr.golf",
+		"path": "/Users/mcfedr/projects/golf",
+		"author": {
+			"name": "Fred Cox",
+			"email": "mcfedr@gmail.com"
+		}
+	},
+	"modules": {
+		"android": true,
+		"blackberry": true,
+		"ios": true,
+		"webapp": true
+	},
+	"port": 4000,
+	"helpers": {
+		"almond": true,
+		"bootstrap": true,
+		"less": true,
+		"cordova": true,
+		"demo": true,
+		"fontAwesome": true,
+		"git": true,
+		"hogan": true,
+		"icons": true,
+		"index": true,
+		"iscroll": false,
+		"jquery": true,
+		"jqueryHashchange": true,
+		"jqueryMobile": false,
+		"json2": true,
+		"lscache": true,
+		"manifest": true,
+		"netbeans": true,
+		"require": true,
+		"text": true,
+		"underscore": true
+	},
+	"folders": {
+		"source": "html",
+		"sources": {
+			"css": "css",
+			"fonts": "fonts",
+			"images": "img",
+			"js": "js",
+			"less": "less"
+		},
+		"build": "build",
+		"modules": {
+			"android": "android",
+			"blackberry": "blackberry",
+			"ios": "ios",
+			"webapp": "webapp"
+		}
+	}
+}

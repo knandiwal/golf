@@ -15,13 +15,13 @@
 		"webapp": true
 	},
 	"port": 4000,
-    "couch": "http://localhost:5984/golf",
+	"couch": "http://golf:0q673L6543F620O@localhost:5984/golf",
 	"helpers": {
 		"almond": true,
 		"bootstrap": true,
 		"less": true,
 		"cordova": true,
-        "couchapp": true,
+		"couchapp": false,
 		"demo": true,
 		"fontAwesome": true,
 		"git": true,

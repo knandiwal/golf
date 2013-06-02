@@ -25,7 +25,8 @@ require.config({
 		"bootstrapTransition": "libs/bootstrap/bootstrap-transition",
 		"bootstrapTypeahead": "libs/bootstrap/bootstrap-typeahead",
 		"routie": "libs/routie/routie",
-        "pouch": "libs/pouch/pouchdb"
+        "pouch": "libs/pouch/pouchdb",
+		"async": "libs/async/async"
 	},
 	"shim": {
 		"cordova": {
@@ -123,32 +124,23 @@ require.config({
 		"routie": {
 			"exports": "routie"
 		},
-        "pouch": {
-            "exports": "Pouch"
-        }
+		"pouch": {
+			"exports": "Pouch"
+		},
+		"async": {
+			"exports": "async"
+		}
 	}
 });
 
-require(['ready', 'home', 'start', 'pouch'], function(ready, home, start, Pouch) {
+require(['ready', 'home', 'course', 'courses'], function(ready, home, course, courses) {
 	ready(function() {
 		if (window.screen.height === 568) { // iPhone 4"
 			document.querySelector("meta[name=viewport]").content="width=320.1";
 		}
-		start();
+		
+		course();
+		courses();
 		home();
-        
-        var pouchdb = Pouch('test');
-        pouchdb.post({ title: 'local title' }, function(err, response) {
-            console.log(arguments);
-          });
-          
-        var remotedb = Pouch('http://localhost:5984/test');
-        remotedb.post({ title: 'remote title' }, function(err, response) {
-            console.log(arguments);
-          });
-          
-          Pouch.replicate('test', 'http://localhost:5984/test', function(err, response) {
-            console.log(arguments);
-          });
 	});
 });

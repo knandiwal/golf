@@ -544,7 +544,11 @@ var tasks = {
 	                cb(err);
 	                return;
 	            }
-				parser.parse(data, function (e, tree) {
+				parser.parse(data, function (err, tree) {
+					if (err) {
+						cb(err);
+						return;
+					}
 					fs.writeFile(path.join(source('css'), 'main.css'), tree.toCSS({compress: true}), 'utf8', function(err) {
 						if (err) {
 							cb(err);
@@ -641,7 +645,7 @@ var tasks = {
 }
 
 start(function(err) {
-	if(err) console.log('error', err);
+	if(err) errorMsg('error', err);
 	importantMsg('all done');
 });
 

@@ -1,0 +1,36 @@
+{{> nav}}
+<div class="container">
+	<h1><i class="icon-flag"></i> Hole #{{number}}</h1>
+	<form id="hole" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="inputName">Name</label>
+			<div class="controls">
+				<input type="text" placeholder="Hole Name" name="name" id="inputName" value="{{name}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputPar">Par</label>
+			<div class="controls">
+				<input type="number" name="par" id="inputPar" value="{{par}}">
+			</div>
+		</div>
+		<table class="table table-hover" id="waypoints">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Image</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#waypoints}}
+					{{> waypoint}}
+				{{/waypoints}}
+			</tbody>
+		</table>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit"><i class="icon-save"></i> Save</button>
+			<a class="btn" id="add-waypoint"><i class="icon-plus"></i> Add</a>
+		</div>
+	</form>
+</div>

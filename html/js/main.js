@@ -10,7 +10,7 @@ require.config({
 		"jqueryFlot": "libs/jquery.flot/jquery.flot",
 		"jqueryFlotPie": "libs/jquery.flot/jquery.flot.pie",
 		"text": "libs/text/text",
-		"lodash": "libs/lodash/lodash",
+		"underscore": "libs/underscore/underscore",
 		"bootstrapAffix": "libs/bootstrap/bootstrap-affix",
 		"bootstrapAlert": "libs/bootstrap/bootstrap-alert",
 		"bootstrapButton": "libs/bootstrap/bootstrap-button",
@@ -129,16 +129,20 @@ require.config({
 		},
 		"async": {
 			"exports": "async"
+		},
+		"underscore": {
+			"exports": "_"
 		}
 	}
 });
 
-require(['ready', 'home', 'course', 'courses'], function(ready, home, course, courses) {
+require(['ready', 'home', 'courses', 'course', 'hole'], function(ready, home, courses, course, hole) {
 	ready(function() {
 		if (window.screen.height === 568) { // iPhone 4"
 			document.querySelector("meta[name=viewport]").content="width=320.1";
 		}
 		
+		hole();
 		course();
 		courses();
 		home();

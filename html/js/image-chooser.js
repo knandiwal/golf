@@ -1,6 +1,6 @@
 define([
 	'jquery',
-	'lodash',
+	'underscore',
 	'hgn!templates/image-chooser'
 ], function($, _, imageChooserT) {
 	var setup = function($root) {

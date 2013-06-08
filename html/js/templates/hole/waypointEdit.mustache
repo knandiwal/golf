@@ -1,0 +1,32 @@
+<form id="edit-waypoint" class="modal hide fade form-horizontal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>
+			Edit Waypoint
+		</h3>
+	</div>
+	<div class="modal-body">
+		<div class="control-group">
+			<label class="control-label" for="inputWaypointName">Name</label>
+			<div class="controls">
+				<input type="text" placeholder="Waypoint Name" name="name" id="inputWaypointName" value="{{name}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputWaypointDescription">Description</label>
+			<div class="controls">
+				<textarea name="description" id="inputWaypointDescription">{{description}}</textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Image</label>
+			<div class="controls" data-image-chooser="image">
+				{{> imageChooser}}
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn" data-dismiss="modal">Cancel</button>
+		<button type="submit" class="btn btn-primary"><i class="icon-save"></i> Save</button>
+	</div>
+</form>

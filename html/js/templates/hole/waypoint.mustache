@@ -1,19 +1,12 @@
-<tr>
+<tr data-waypoint-id="{{id}}">
 	<td>{{name}}</td>
 	<td>{{description}}</td>
-	<td></td>
+	<td><img data-waypoint-image="{{id}}"></td>
+	<td>
+		{{^noDelete}}
+			<a href="#" data-waypoint-delete="{{id}}">
+				<i class="icon-minus-sign"></i>
+			</a>
+		{{/noDelete}}
+	</td>
 </tr>
-<!--<div class="tab-pane {{active}}" id="waypoint-{{id}}">
-	<div class="control-group">
-		<label class="control-label" for="input-{{id}}-description">{{name}} Description</label>
-		<div class="controls">
-			<textarea name="{{id}}-description" id="input-{{id}}-description"></textarea>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label">Image</label>
-		<div class="controls" data-image-chooser="{{id}}-image">
-			{{> imageChooser}}
-		</div>
-	</div>
-</div>-->

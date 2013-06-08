@@ -15,10 +15,10 @@
 		</tbody>
 	</table>
 	<div class="form-actions">
-		<a class="btn btn-primary" href="#add-course" role="button" data-toggle="modal"><i class="icon-plus"></i> Add</a>
+		<a class="btn btn-primary" href="#add-course" data-toggle="modal"><i class="icon-plus"></i> Add</a>
 	</div>
 </div>
-<form id="add-course" class="modal hide fade form-horizontal" role="dialog">
+<form id="add-course" class="modal hide fade form-horizontal">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">×</button>
 		<h3>
@@ -27,9 +27,9 @@
 	</div>
 	<div class="modal-body">
 		<div class="control-group">
-			<label class="control-label" for="inputEmail">Name</label>
+			<label class="control-label" for="inputCourseName">Name</label>
 			<div class="controls">
-				<input type="text" placeholder="Course Name" name="name">
+				<input type="text" placeholder="Course Name" name="name" id="inputCourseName">
 			</div>
 		</div>
 	</div>

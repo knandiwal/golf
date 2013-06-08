@@ -6,8 +6,9 @@ define([
 	'loading',
 	'hgn!templates/course',
 	'hgn!templates/course/hole',
-	'partials'
-], function($, _, routie, db, loading, courseT, holeT, partials) {
+	'partials',
+	'error'
+], function($, _, routie, db, loading, courseT, holeT, partials, ERR) {
 	return function() {
 		
 		var coursePartials = _.extend({
@@ -17,6 +18,7 @@ define([
 		routie('courses/:slug', function(slug) {
 			loading(function(stopLoading) {
 				db.course.get(slug, function(err, course) {
+					if(ERR(err)) return;
 					$('#app').html(courseT({
 						nav: {
 							courses: true
@@ -30,13 +32,15 @@ define([
 						var $this = $(this);
 						e.preventDefault();
 						loading(function(stopLoading) {
-							var holeNum = $this.attr('data-hole-delete');
+							var holeId = $this.attr('data-hole-delete');
 							course.holes = _.filter(course.holes, function(hole) {
-								return hole.number != holeNum;
+								return hole.id != holeId;
 							});
-							db.course.save(course, function(err, doc) {
-								$this.parents('tr').remove();
+							db.course.save(course, function(err, res) {
 								stopLoading();
+								if(ERR(err)) return;
+								course._rev = res.rev;
+								$this.parents('tr').remove();
 							});
 						});
 					});

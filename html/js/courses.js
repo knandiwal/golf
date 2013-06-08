@@ -6,8 +6,9 @@ define(['jquery',
 	'hgn!templates/courses',
 	'hgn!templates/courses/course',
 	'partials',
+	'error',
 	'bootstrapModal'
-], function($, _, routie, db, loading, coursesT, courseT, partials) {
+], function($, _, routie, db, loading, coursesT, courseT, partials, ERR) {
 	return function() {
 		
 		var coursesPartials = _.extend({
@@ -17,6 +18,7 @@ define(['jquery',
 		routie('courses', function() {
 			loading(function(stopLoading) {
 				db.course.all(function(err, courses) {
+					if(ERR(err)) return;
 					$('#app').html(coursesT({
 						nav: {
 							courses: true
@@ -30,23 +32,18 @@ define(['jquery',
 							name = nameInp.val(),
 							slug = name.toLowerCase().replace(' ', '-');
 						e.preventDefault();
-						loading(function(stopLoading){
+						loading(function(stopLoading) {
 							db.course.add({
 								type: 'course',
 								name: name,
 								slug: slug,
-								holes: []
+								holes: [],
+								nextId: 0
 							}, function(err, response) {
 								$this.modal('hide');
-								nameInp.val('');
-								$('tbody').append(courseT({
-									key: response.id,
-									value: {
-										name: name,
-										slug: slug
-									}
-								}));
 								stopLoading();
+								if(ERR(err)) return;
+								routie('courses/' + slug);
 							});
 						});
 					});
@@ -56,8 +53,9 @@ define(['jquery',
 						e.preventDefault();
 						loading(function(stopLoading) {
 							db.course.remove($this.attr('data-course-delete'), function(err, response) {
-								$this.parents('tr').remove();
 								stopLoading();
+								if(ERR(err)) return;
+								$this.parents('tr').remove();
 							});
 						});
 					});

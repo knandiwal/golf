@@ -9,16 +9,21 @@ define([
 	'hgn!templates/hole/waypointEdit',
 	'partials',
 	'image-chooser',
+	'location-chooser',
+	'async',
+	'gmapskey',
 	'error',
 	'bootstrapModal'
-], function($, _, routie, db, loading, holeT, waypointT, waypointEditT, partials, imageChooserPartials, ERR) {
+], function($, _, routie, db, loading, holeT, waypointT, waypointEditT, partials, imageChooserPartials, locationChooserPartials, async, gmapsKey, ERR) {
 	return function() {
+		
+		var sensor = navigator.geolocation ? 'true' : 'false';
 		
 		var holePartials = _.extend({
 			waypoint: waypointT.template,
 		}, partials);
 		
-		var waypointEditPartials = imageChooserPartials;
+		var waypointEditPartials = _.extend({}, imageChooserPartials, locationChooserPartials);
 		
 		routie('courses/:slug/holes/new', function(slug) {
 			loading(function(stopLoading) {
@@ -59,7 +64,9 @@ define([
 					$('#app').html(holeT(_.extend({
 						nav: {
 							courses: true
-						}
+						},
+						sensor: sensor,
+						gmapsKey: gmapsKey
 					}, hole), holePartials));
 					
 					_.each(hole.waypoints, loadWaypointImage);
@@ -83,7 +90,8 @@ define([
 								return waypoint.id == waypointId;
 							}),
 							$modal,
-							imageChooser;
+							imageChooser,
+							locationChooser;
 
 						e.preventDefault();
 						$(document.body).append(waypointEditT(waypoint, waypointEditPartials));
@@ -92,40 +100,53 @@ define([
 						imageChooser = $modal.find('[data-image-chooser]').imageChooser(waypoint.id, course);
 						
 						$modal.on('submit', function(e) {
+							var position = locationChooser();
 							e.preventDefault();
+							if(position) {
+								waypoint.position = position;
+							}
 							waypoint.name = $modal.find('[name=name]').val();
 							waypoint.description = $modal.find('[name=description]').val();
 							loading(function(stopLoading) {
 								db.course.save(course, function(err, res) {
-									var file;
 									if(ERR(err)) {
 										stopLoading();
 										return;
 									}
 									course._rev = res.rev;
-									file = imageChooser();
-									if(file == 'clear') {
-										db.course.removeImage(waypoint.id, course, done);
-									}
-									else if(file) {
-										db.course.saveImage(waypoint.id, course, imageChooser(), done);
-									}
-									else {
-										done();
-									}
-									function done(err, res) {
+									async.waterfall([
+										function(cb) {
+											var file = imageChooser();
+											if(file == 'clear') {
+												db.course.removeImage(waypoint.id, course, cb);
+											}
+											else if(file) {
+												db.course.saveImage(waypoint.id, course, file, cb);
+											}
+											else {
+												cb();
+											}
+										}
+									], function(err, res) {
 										$modal.modal('hide');
 										stopLoading();
 										if(ERR(err)) return;
 										if(res) {
 											course._rev = res.rev;
 										}
-										$tr.replaceWith(waypointT(waypoint));
+										$tr.replaceWith(waypointT(_.extend({
+											sensor: sensor,
+											gmapsKey: gmapsKey
+										}, waypoint)));
 										loadWaypointImage(waypoint);
 										return err;
-									}
+									});
 								});
 							});
+						});
+						
+						$modal.on('shown', function() {
+							locationChooser = $modal.find('[data-location-chooser]').locationChooser(waypoint.position);
 						});
 						
 						$modal.on('hidden', function() {
@@ -164,11 +185,15 @@ define([
 					function loadWaypointImage(waypoint) {
 						db.course.getImageURL(waypoint.id, course, function(err, url) {
 							if(ERR(err, true)) return;
-							var $img = $waypointsBody.find('img[data-waypoint-image=' + waypoint.id + ']');
+							var $img = $(document.createElement('img'));
 							$img.one('load', function() {
+								var $holder = $waypointsBody.find('img[data-waypoint-image=' + waypoint.id + ']');
+								$holder.html('');
+								$holder.append($img);
 								db.course.releaseURL(url);
 							});
 							$img.attr('src', url);
+							$img.attr('class', 'img-polaroid');
 						});
 					}
 				});

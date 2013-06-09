@@ -8,16 +8,15 @@ define([
 ], function($, _, db, imageChooserT, emptyT, ERR) {
 	var URL = window.URL || window.webkitURL;
 	$.fn.imageChooser = function(id, course) {
-		var $chooser = this,
-			name = $chooser.attr('data-image-chooser'),
-			$imageHolder = $chooser.find('.image'),
+		var name = this.attr('data-image-chooser'),
+			$imageHolder = this.find('[data-image]'),
 			$image,
-			$fileInp = $chooser.find('input'),
+			$fileInp = this.find('input'),
 			cleared = false;
-		if($chooser.attr('data-image-chooser-setup')) {
+		if(this.attr('data-image-chooser-setup')) {
 			return;
 		}
-		$chooser.attr('data-image-chooser-setup', 'done');
+		this.attr('data-image-chooser-setup', 'done');
 		
 		db.course.getImageURL(id, course, function(err, url) {
 			if(ERR(err, true)) return;
@@ -46,7 +45,7 @@ define([
 			}
 		});
 		
-		$chooser.find('[data-image-clear]').on('click', function() {
+		this.find('[data-image-clear]').on('click', function() {
 			$fileInp.wrap('<form>').closest('form').get(0).reset();
 			$fileInp.unwrap();
 			$imageHolder.html(emptyT());

@@ -1,9 +1,14 @@
 define(['jquery'], function($) {
-	$loading = $('#loading');
-	return function(cb) {
-		$loading.addClass('in');
-		cb(function() {
-			$loading.removeClass('in');
-		});
+	var $loading = $('#loading'),
+		loading = function(cb) {
+			loading.show();
+			cb(loading.hide);
+		};
+	loading.hide = function() {
+		$loading.removeClass('in');
 	};
+	loading.show = function() {
+		$loading.addClass('in');
+	};
+	return loading;
 });

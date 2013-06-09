@@ -136,7 +136,7 @@ require.config({
 	}
 });
 
-require(['ready', 'home', 'courses', 'course', 'hole'], function(ready, home, courses, course, hole) {
+require(['ready', 'home', 'courses', 'course', 'hole', 'loading'], function(ready, home, courses, course, hole, loading) {
 	ready(function() {
 		if (window.screen.height === 568) { // iPhone 4"
 			document.querySelector("meta[name=viewport]").content="width=320.1";
@@ -146,5 +146,7 @@ require(['ready', 'home', 'courses', 'course', 'hole'], function(ready, home, co
 		course();
 		courses();
 		home();
+		
+		loading.hide();
 	});
 });

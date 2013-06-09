@@ -645,7 +645,7 @@ var tasks = {
 }
 
 start(function(err) {
-	if(err) errorMsg('error', err);
+	if(err) errorMsg(err);
 	importantMsg('all done');
 });
 
@@ -757,5 +757,6 @@ function importantMsg(messg) {
 }
 
 function errorMsg(messg) {
-	console.log(cc.redBright(messg));
+	console.log(cc.redBright('error: ') + messg);
+	console.log(messg);
 }

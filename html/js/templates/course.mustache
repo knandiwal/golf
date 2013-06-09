@@ -1,11 +1,13 @@
 {{> nav}}
 <div class="container">	
-	<h1><i class="icon-road"></i> {{name}}</h1>
+	<h1><a class="back" href="#edit/courses"><i class="icon-angle-left"></i></a> <i class="icon-road"></i> {{name}}</h1>
 	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th>#</th>
 				<th>Hole Name</th>
+				<th>Par</th>
+				<th>Route</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -16,6 +18,6 @@
 		</tbody>
 	</table>
 	<div class="form-actions">
-		<a class="btn btn-primary" href="#courses/{{slug}}/holes/new"><i class="icon-plus"></i> Add</a>
+		<a class="btn btn-primary" href="#edit/courses/{{slug}}/holes/new"><i class="icon-plus"></i> Add</a>
 	</div>
 </div>

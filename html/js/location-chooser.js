@@ -2,9 +2,9 @@ define([
 	'jquery',
 	'underscore',
 	'hgn!templates/location-chooser',
-	'gmapskey',
+	'gmaps',
 	'error'
-], function($, _, locationChooserT, gmapsKey, ERR) {
+], function($, _, locationChooserT, gmaps, ERR) {
 	var gmapsLoader = false,
 		mapsLoaderCBs = [];
 	$.fn.locationChooser = function(position) {
@@ -31,14 +31,14 @@ define([
 			if(ops.marker) {
 				gpos = ops.marker.getPosition();
 				return {
-					lat: gpos.lat(),
-					lng: gpos.lng()
+					lat: gpos.lat().toFixed(5),
+					lng: gpos.lng().toFixed(5)
 				};
 			}
 			if(ops.latestPosition) {
 				return {
-					lat: ops.latestPosition.coords.latitude,
-					lng: ops.latestPosition.coords.longitude
+					lat: ops.latestPosition.coords.latitude.toFixed(5),
+					lng: ops.latestPosition.coords.longitude.toFixed(5)
 				};
 			}
 			return position;
@@ -106,7 +106,7 @@ define([
 	function loadGMapsScript(ops) {
 		var script = document.createElement("script");
 		script.type = "text/javascript";
-		script.src = "http://maps.googleapis.com/maps/api/js?key=" + gmapsKey + "&sensor=" + (ops.geo ? 'true' : 'false') + "&callback=loadedGMaps";
+		script.src = "http://maps.googleapis.com/maps/api/js?key=" + gmaps.gmapsKey + "&sensor=" + gmaps.sensor + "&callback=loadedGMaps";
 		script.onerror = function() {
 			gmapsLoader = false;
 		};

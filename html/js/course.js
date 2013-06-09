@@ -7,26 +7,27 @@ define([
 	'hgn!templates/course',
 	'hgn!templates/course/hole',
 	'partials',
+	'gmaps',
 	'error'
-], function($, _, routie, db, loading, courseT, holeT, partials, ERR) {
+], function($, _, routie, db, loading, courseT, holeT, partials, gmaps, ERR) {
 	return function() {
 		
 		var coursePartials = _.extend({
 			hole: holeT.template,
 		}, partials);
 		
-		routie('courses/:slug', function(slug) {
+		routie('edit/courses/:slug', function(slug) {
 			loading(function(stopLoading) {
 				db.course.get(slug, function(err, course) {
 					if(ERR(err)) return;
-					$('#app').html(courseT({
+					$('#app').html(courseT(_.extend({
 						nav: {
-							courses: true
+							edit: true
 						},
 						holes: course.holes,
 						slug: slug,
 						name: course.name
-					}, coursePartials));
+					}, gmaps), coursePartials));
 					
 					$('[data-hole-delete]').on('click', function(e) {
 						var $this = $(this);

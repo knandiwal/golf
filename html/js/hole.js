@@ -11,13 +11,11 @@ define([
 	'image-chooser',
 	'location-chooser',
 	'async',
-	'gmapskey',
+	'gmaps',
 	'error',
 	'bootstrapModal'
-], function($, _, routie, db, loading, holeT, waypointT, waypointEditT, partials, imageChooserPartials, locationChooserPartials, async, gmapsKey, ERR) {
+], function($, _, routie, db, loading, holeT, waypointT, waypointEditT, partials, imageChooserPartials, locationChooserPartials, async, gmaps, ERR) {
 	return function() {
-		
-		var sensor = navigator.geolocation ? 'true' : 'false';
 		
 		var holePartials = _.extend({
 			waypoint: waypointT.template,
@@ -25,7 +23,7 @@ define([
 		
 		var waypointEditPartials = _.extend({}, imageChooserPartials, locationChooserPartials);
 		
-		routie('courses/:slug/holes/new', function(slug) {
+		routie('edit/courses/:slug/holes/new', function(slug) {
 			loading(function(stopLoading) {
 				db.course.get(slug, function(err, course) {
 					if(ERR(err)) return;
@@ -35,6 +33,7 @@ define([
 							id: id,
 							number: number,
 							name: 'Hole #' + number,
+							par: 3,
 							waypoints: [{
 								name: 'Start',
 								id: course.nextId++,
@@ -48,13 +47,13 @@ define([
 					course.holes.push(hole);
 					db.course.save(course, function(err) {
 						stopLoading();
-						routie('courses/' + slug + '/holes/' + id);
+						routie('edit/courses/' + slug + '/holes/' + id);
 					});
 				});
 			});
 		});
 		
-		routie('courses/:slug/holes/:id', function(slug, id) {
+		routie('edit/courses/:slug/holes/:id', function(slug, id) {
 			loading(function(stopLoading) {
 				db.hole.get(slug, id, function(err, hole, course) {
 					if(ERR(err)) return;
@@ -63,11 +62,10 @@ define([
 					
 					$('#app').html(holeT(_.extend({
 						nav: {
-							courses: true
+							edit: true
 						},
-						sensor: sensor,
-						gmapsKey: gmapsKey
-					}, hole), holePartials));
+						slug: slug
+					}, gmaps, hole), holePartials));
 					
 					_.each(hole.waypoints, loadWaypointImage);
 					
@@ -134,10 +132,7 @@ define([
 										if(res) {
 											course._rev = res.rev;
 										}
-										$tr.replaceWith(waypointT(_.extend({
-											sensor: sensor,
-											gmapsKey: gmapsKey
-										}, waypoint)));
+										$tr.replaceWith(waypointT(_.extend({}, gmaps, waypoint)));
 										loadWaypointImage(waypoint);
 										return err;
 									});
@@ -175,7 +170,7 @@ define([
 							db.course.save(course, function(err) {
 								stopLoading();
 								if(ERR(err)) return;
-								routie('courses/' + slug);
+								routie('edit/courses/' + slug);
 							});
 						});
 					});

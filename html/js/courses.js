@@ -15,13 +15,13 @@ define(['jquery',
 			course: courseT.template
 		}, partials);
 		
-		routie('courses', function() {
+		routie('edit/courses', function() {
 			loading(function(stopLoading) {
 				db.course.all(function(err, courses) {
 					if(ERR(err)) return;
 					$('#app').html(coursesT({
 						nav: {
-							courses: true
+							edit: true
 						},
 						courses: courses.rows
 					}, coursesPartials));
@@ -43,7 +43,7 @@ define(['jquery',
 								$this.modal('hide');
 								stopLoading();
 								if(ERR(err)) return;
-								routie('courses/' + slug);
+								routie('edit/courses/' + slug);
 							});
 						});
 					});

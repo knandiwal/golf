@@ -1,6 +1,6 @@
 {{> nav}}
 <div class="container">
-	<h1><i class="icon-flag"></i> {{name}}</h1>
+	<h1><a class="back" href="#edit/courses/{{slug}}"><i class="icon-angle-left"></i></a> <i class="icon-flag"></i> {{name}}</h1>
 	<form id="hole" class="form-horizontal">
 		<div class="control-group">
 			<label class="control-label" for="inputName">Name</label>
@@ -32,7 +32,7 @@
 		</table>
 		<div class="form-actions">
 			<button class="btn btn-primary" type="submit"><i class="icon-save"></i> Save</button>
-			<a class="btn" id="add-waypoint"><i class="icon-plus"></i> Add</a>
+			<a class="btn" id="add-waypoint" href="#"><i class="icon-plus"></i> Add</a>
 		</div>
 	</form>
 </div>

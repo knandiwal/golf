@@ -1,6 +1,7 @@
-define(['pouch', 'underscore'], function(Pouch, _) {
+define(['pouch', 'underscore', 'loading'], function(Pouch, _, loading) {
 	var URL = window.URL || window.webkitURL,
-		golfdb = Pouch('golf'),
+		dbname = 'golf',
+		golfdb = Pouch(dbname),
 		db = {
 			course: {
 				all: function(cb) {
@@ -56,7 +57,23 @@ define(['pouch', 'underscore'], function(Pouch, _) {
 						cb(null, _.findWhere(course.holes, {id: parseInt(id)}), course);
 					});
 				}
+			},
+			push: function(cb) {
+				Pouch.replicate(dbname, document.location.origin + '/golf', cb);
+			},
+			pull: function(cb) {
+				Pouch.replicate(document.location.origin + '/golf', dbname, cb);
 			}
 		};
+	if(localStorage.pulled != "pulled") {
+		loading(function(stopLoading) {
+			db.pull(function(err) {
+				stopLoading();
+				if(!err) {
+					localStorage.pulled = "pulled";
+				}
+			});
+		});
+	}
 	return db;
 });

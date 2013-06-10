@@ -1,7 +1,7 @@
 <tr data-waypoint-id="{{id}}">
 	<td>{{name}}</td>
 	<td>{{description}}</td>
-	<td data-waypoint-image><i class="icon-picture img-polaroid"></i></td>
+	<td data-waypoint-image="{{id}}"><i class="icon-picture img-polaroid"></i></td>
 	<td>
 		{{#position}}
 		<img src="http://maps.google.com/maps/api/staticmap?center={{lat}},{{lng}}&amp;zoom=15&amp;markers=size:small|{{lat}},{{lng}}&amp;size=100x100&amp;sensor={{sensor}}&amp;key={{gmapsKey}}&amp;visual_refresh=true&amp;maptype=satellite" width="100" height="100" class="img-polaroid">

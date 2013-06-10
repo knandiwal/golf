@@ -59,11 +59,29 @@ define(['jquery',
 							});
 						});
 					});
+					
+					$('#push').on('click', function() {
+						loading(function(stopLoading) {
+							db.push(function(err) {
+								stopLoading();
+								ERR(err);
+							});
+						});
+					});
+					
+					$('#pull').on('click', function() {
+						loading(function(stopLoading) {
+							db.pull(function(err) {
+								stopLoading();
+								if(ERR(err)) return;
+								routie('');
+							});
+						});
+					});
+					
 					stopLoading();
 				});
 			});
 		});
-		
-		
 	};
 });

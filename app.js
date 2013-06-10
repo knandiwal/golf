@@ -20,6 +20,6 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
   } 
 }
 
-couchapp.loadAttachments(ddoc, path.join(__dirname, 'build', 'webapp'));
+couchapp.loadAttachments(ddoc, path.join(__dirname, 'html'));
 
 module.exports = ddoc;

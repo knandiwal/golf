@@ -107,25 +107,23 @@ define([
 							waypoint.description = $modal.find('[name=description]').val();
 							loading(function(stopLoading) {
 								db.course.save(course, function(err, res) {
+									var file;
 									if(ERR(err)) {
 										stopLoading();
 										return;
 									}
 									course._rev = res.rev;
-									async.waterfall([
-										function(cb) {
-											var file = imageChooser();
-											if(file == 'clear') {
-												db.course.removeImage(waypoint.id, course, cb);
-											}
-											else if(file) {
-												db.course.saveImage(waypoint.id, course, file, cb);
-											}
-											else {
-												cb();
-											}
-										}
-									], function(err, res) {
+									file = imageChooser();
+									if(file == 'clear') {
+										db.course.removeImage(waypoint.id, course, done);
+									}
+									else if(file) {
+										db.course.saveImage(waypoint.id, course, file, done);
+									}
+									else {
+										done();
+									}
+									function done(err, res) {
 										$modal.modal('hide');
 										stopLoading();
 										if(ERR(err)) return;
@@ -134,8 +132,7 @@ define([
 										}
 										$tr.replaceWith(waypointT(_.extend({}, gmaps, waypoint)));
 										loadWaypointImage(waypoint);
-										return err;
-									});
+									}
 								});
 							});
 						});
@@ -179,12 +176,13 @@ define([
 					
 					function loadWaypointImage(waypoint) {
 						db.course.getImageURL(waypoint.id, course, function(err, url) {
+							var $holder, $img;
 							if(ERR(err, true)) return;
-							var $img = $(document.createElement('img'));
+							$img = $(document.createElement('img'));
+							$holder = $waypointsBody.find('[data-waypoint-image=' + waypoint.id + ']');
+							$holder.html('');
+							$holder.append($img);
 							$img.one('load', function() {
-								var $holder = $waypointsBody.find('img[data-waypoint-image=' + waypoint.id + ']');
-								$holder.html('');
-								$holder.append($img);
 								db.course.releaseURL(url);
 							});
 							$img.attr('src', url);

@@ -21,7 +21,7 @@
 		"bootstrap": true,
 		"less": true,
 		"cordova": true,
-		"couchapp": false,
+		"couchapp": true,
 		"demo": true,
 		"fontAwesome": true,
 		"git": true,
